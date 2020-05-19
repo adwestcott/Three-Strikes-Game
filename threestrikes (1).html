@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Three Strikes</title>
+	
+		<style type="text/css">
+			td{
+				border-style: solid;
+				padding: 10px;
+				cursor: pointer;
+			}
+		</style>
+
+		<script type="text/javascript">
+			var nums = ["1", "2", "3", "4", "5", "X", "X", "X"];
+			var pickedNum = -9;
+			var strikeCount = 0;
+			var playerWins = false;
+
+			function guess(box){
+				if(pickedNum != -9){
+					switch(box){
+						case 1:
+							document.getElementById("box1").innerHTML = pickedNum;
+						break;
+						case 2:
+							document.getElementById("box2").innerHTML = pickedNum;
+						break;
+						case 3:
+							document.getElementById("box3").innerHTML = pickedNum;
+						break;
+						case 4:
+							document.getElementById("box4").innerHTML = pickedNum;
+						break;
+						case 5:
+							document.getElementById("box5").innerHTML = pickedNum;
+						break;
+					}
+					checkAns();
+				}
+			}
+
+			function pickNum(){
+				var repeat = true;
+				while(repeat){
+					var random = Math.floor(Math.random() * 8);
+					pickedNum = nums[random];
+					nums[random] = 0; //effectively removing the number from the array
+
+					if(pickedNum != 0){
+						if(pickedNum == "X"){
+							pickedNum = -9; //keep player from putting X's into the price
+							strikeCount++;
+							document.getElementById("strike"+strikeCount).innerHTML = "X";
+							document.getElementById("pickedNumField").value = "STRIKE!";
+							if(strikeCount == 3)
+								gameOver();
+							repeat = false;
+						}else{
+							document.getElementById("pickedNumField").value = pickedNum;
+							repeat = false;
+						}
+					}
+				}
+			}
+
+			function gameOver(){
+				if(playerWins == true)
+					document.getElementById("gameOverHeader").innerHTML = "YOU WON!";
+				else{
+					document.getElementById("gameOverHeader").innerHTML = "YOU LOST!";
+				}
+				document.getElementById("pickButton").disabled = true;
+			}
+
+			function checkAns(){
+				var emptyBoxes = 5;
+				var correctNum = 1;
+				var correctBoxes = 0;
+				for(var i = 1; i <= 5; i++){
+					if(document.getElementById("box"+i).innerHTML != "#")
+						emptyBoxes--;
+				}
+				if(emptyBoxes == 0){
+					for(var i = 1; i <= 5; i++){
+						if(document.getElementById("box"+i).innerHTML == correctNum){
+							correctBoxes++;
+							correctNum++;
+						}
+					}
+					if(correctBoxes == 5){
+						playerWins = true;
+						gameOver();
+					}
+				}
+			}
+
+		</script>
+
+	</head>
+	<body>
+		<h1>Three Strikes</h1>
+
+		<font size="50">
+			<table>
+				<tr>
+					<td>$</td>
+					<td id="box1" onclick="guess(1)">#</td>
+					<td id="box2" onclick="guess(2)">#</td>
+					<td id="box3" onclick="guess(3)">#</td>
+					<td id="box4" onclick="guess(4)">#</td>
+					<td id="box5" onclick="guess(5)">#</td>
+				</tr>
+			</table>
+		</font>
+
+		<font size="6">
+			<table>
+					<tr><em>Picked number: </em>
+						<input type="text" readonly id="pickedNumField" />
+					</tr>
+					<tr>
+						<input type="button" id="pickButton" value="PICK" onclick="pickNum()" />
+					</tr>	
+			</table>
+		</font>
+		<h2>Strikes</h2>
+		<font size="12">
+			<table>
+				<tr><td id="strike1">&nbsp;</td>
+					<td id="strike2">&nbsp;</td>
+					<td id="strike3">&nbsp;</td>
+				</tr>
+			</table>
+		</font>
+		<h3 id="gameOverHeader">&nbsp;</h3>
+		<p>Once you've picked a number, click one of the boxes containing # to place it.</p>
+	  
+		
+	</body>
+</html>
