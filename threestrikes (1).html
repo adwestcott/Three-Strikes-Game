@@ -5,18 +5,29 @@
 		<title>Three Strikes</title>
 	
 		<style type="text/css">
+			#game-board{
+				background-color: #B0C4DE;
+				border-style: double;
+				padding: 15px;
+			}
 			td{
 				border-style: solid;
 				padding: 10px;
 				cursor: pointer;
 			}
+			body{
+				background-color: #778899;
+			}
 		</style>
 
 		<script type="text/javascript">
 			var nums = ["1", "2", "3", "4", "5", "X", "X", "X"];
-			var pickedNum = -9;
+			var pickedNum = -9; //keeps the player from putting numbers in the price without having picked anything
 			var strikeCount = 0;
 			var playerWins = false;
+			var emptyBoxes = 5;
+			var correctNum = 1;
+			var correctBoxes = 0;
 
 			function guess(box){
 				if(pickedNum != -9){
@@ -37,6 +48,8 @@
 							document.getElementById("box5").innerHTML = pickedNum;
 						break;
 					}
+					pickedNum = -9;
+					emptyBoxes--;
 					checkAns();
 				}
 			}
@@ -73,69 +86,68 @@
 				}
 				document.getElementById("pickButton").disabled = true;
 			}
-
+			
+			
 			function checkAns(){
-				var emptyBoxes = 5;
-				var correctNum = 1;
-				var correctBoxes = 0;
-				for(var i = 1; i <= 5; i++){
-					if(document.getElementById("box"+i).innerHTML != "#")
-						emptyBoxes--;
-				}
 				if(emptyBoxes == 0){
 					for(var i = 1; i <= 5; i++){
 						if(document.getElementById("box"+i).innerHTML == correctNum){
 							correctBoxes++;
 							correctNum++;
 						}
+						if(correctBoxes == 5){
+							playerWins = true; }
 					}
-					if(correctBoxes == 5){
-						playerWins = true;
-						gameOver();
-					}
+					gameOver();
 				}
 			}
+			
 
 		</script>
 
 	</head>
 	<body>
-		<h1>Three Strikes</h1>
+		<div id="game-board">
+			<h1><em>Three Strikes</em></h1>
 
-		<font size="50">
-			<table>
-				<tr>
-					<td>$</td>
-					<td id="box1" onclick="guess(1)">#</td>
-					<td id="box2" onclick="guess(2)">#</td>
-					<td id="box3" onclick="guess(3)">#</td>
-					<td id="box4" onclick="guess(4)">#</td>
-					<td id="box5" onclick="guess(5)">#</td>
-				</tr>
-			</table>
-		</font>
-
-		<font size="6">
-			<table>
-					<tr><em>Picked number: </em>
-						<input type="text" readonly id="pickedNumField" />
-					</tr>
+			<font size="50">
+				<table>
 					<tr>
-						<input type="button" id="pickButton" value="PICK" onclick="pickNum()" />
-					</tr>	
-			</table>
-		</font>
-		<h2>Strikes</h2>
-		<font size="12">
-			<table>
-				<tr><td id="strike1">&nbsp;</td>
-					<td id="strike2">&nbsp;</td>
-					<td id="strike3">&nbsp;</td>
-				</tr>
-			</table>
-		</font>
-		<h3 id="gameOverHeader">&nbsp;</h3>
-		<p>Once you've picked a number, click one of the boxes containing # to place it.</p>
+						<td>$</td>
+						<td id="box1" onclick="guess(1)">#</td>
+						<td id="box2" onclick="guess(2)">#</td>
+						<td id="box3" onclick="guess(3)">#</td>
+						<td id="box4" onclick="guess(4)">#</td>
+						<td id="box5" onclick="guess(5)">#</td>
+					</tr>
+				</table>
+			</font>
+
+			<font size="6">
+				<table>
+						<tr><em>Picked number: </em>
+							<input type="text" readonly id="pickedNumField" />
+						</tr>
+						<tr>
+							<input type="button" id="pickButton" value="PICK" onclick="pickNum()" />
+						</tr>	
+				</table>
+			</font>
+			<h2>Strikes</h2>
+			<font size="12">
+				<table>
+					<tr><td id="strike1">&nbsp;</td>
+						<td id="strike2">&nbsp;</td>
+						<td id="strike3">&nbsp;</td>
+					</tr>
+				</table>
+			</font>
+			<h3 id="gameOverHeader">&nbsp;</h3>
+			<p>The goal is to put the numbers in the right order. When picking a number, you will get a random number between 1-5 or a strike. If you get three strikes, you lose.</p>
+			<p>Once you've picked a number, click one of the boxes containing # to place it.</p>
+			<p><em>(The answer here is $12345)</em></p>
+			<input type="button" id="reset" value="Reset" onclick="location.reload()" />
+		</div>
 	  
 		
 	</body>
